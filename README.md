@@ -1,6 +1,5 @@
 # BeiJingSubwayFlows
-北京地铁客流量统计（py爬虫+js统计图） 
-
+突然很好奇北京地铁每天的客流量变化，于是写了个爬虫。结果很有意思，每周7天的客流变化都很规律
 ---
 <img src="https://github.com/gojuukaze/BeiJingSubwayFlows/blob/master//tu.png?raw=true">
 
