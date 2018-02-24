@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+<head>
+    <meta charset="utf-8">
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts.min.js"></script>
+
+<script type="text/javascript" src="sub_data.js"></script>
+<script type="text/javascript">
+MAX=118;
+MIN_DATE=strToDate(BASEX[0]);
+MAX_DATE=strToDate(BASEX[BASEX.length-1]);
+
+function getOption(x,y)
+{
+    var option = {
+        backgroundColor: '#0f375f',
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'shadow'
+            }
+        },
+        legend: {
+            data: ['客流量（万人）', '客流量（万人）'],
+            textStyle: {
+                color: '#ccc'
+            }
+        },
+        xAxis: {
+            data: x,
+            axisLine: {
+                lineStyle: {
+                    color: '#ccc'
+                }
+            }
+        },
+        yAxis: {
+            splitLine: {show: false},
+            axisLine: {
+                lineStyle: {
+                    color: '#ccc'
+                }
+            }
+        },
+        series: [{
+            name: '客流量（万人）',
+            type: 'line',
+            smooth: true,
+            showAllSymbol: true,
+            symbol: 'emptyCircle',
+            symbolSize: 15,
+            data: y
+        }, {
+            name: '客流量（万人）',
+            type: 'bar',
+            
+            itemStyle: {
+                normal: {
+                    barBorderRadius: 5,
+                    color: new echarts.graphic.LinearGradient(
+                        0, 0, 0, 1,
+                        [
+                            {offset: 0, color: '#14c8d4'},
+                            {offset: 1, color: '#43eec6'}
+                        ]
+                    )
+                }
+            },
+            data: y
+        }]
+    };
+    return option;
+}
+
+function isPC() {
+    var userAgentInfo = navigator.userAgent;
+    var Agents = ["Android", "iPhone", "Windows Phone"];
+    var flag = true;
+    for (var v = 0; v < Agents.length; v++) {
+        if (userAgentInfo.indexOf(Agents[v]) > 0) {
+            flag = false;
+            break;
+        }
+    }
+    return flag;
+}
+function strToDate(str)
+{
+    return new Date(str.replace(/-/g, "/"));
+}
+function dateDiff(sDate,eDate){ 
+　　var days = eDate.getTime() - sDate.getTime(); 
+　　var day = parseInt(days / (1000 * 60 * 60 * 24)); 
+　　return day; 
+}
+
+
+function getXY(start,end)
+{
+    
+    var x=[];
+    var y=[];
+    if(!start || !end)
+    {
+        var tempx=BASEX.slice(BASEX.length-MAX+1);
+        var tempy=BASEY.slice(BASEY.length-MAX+1);
+        var startInput=document.getElementById("start");
+        var endInput=document.getElementById("end");
+
+        for(var i=0;i<tempx.length;i++)
+        {
+            x.push(tempx[i]);
+            y.push(tempy[i]);
+        }
+        startInput.value=tempx[0];
+        endInput.value=tempx[tempx.length-1];
+    }
+    else
+    {
+        start=start.replace(/\s+/g,"");
+        end=end.replace(/\s+/g,"");
+        var sDate=strToDate(start);
+        var eDate=strToDate(end);
+        console.log(sDate);
+        console.log(eDate);
+
+        if (sDate<MIN_DATE)
+        {
+            alert("小于日期最小值");
+            return [x,y];
+        }
+        if (eDate>MAX_DATE)
+        {
+            alert("大于日期最大值");
+            return [x,y];
+        }
+        var day=dateDiff(sDate,eDate);
+        if(day<10 || day>MAX)
+        {
+            alert("日期间隔必须：大于10天，小于118天 ！");
+            return [x,y];
+        }
+        
+        // 先暴力吧
+        var begin=false;
+        for(var i=0;i<BASEX.length;i++)
+        {
+            if(!begin && BASEX[i]==start)
+            {
+                begin=true;
+            }
+            if(begin)
+            {
+                x.push(BASEX[i]);
+                y.push(BASEY[i]);
+                if(BASEX[i]==end)
+                {break;}
+            }
+        }
+
+    }
+    return [x,y];
+}
+</script>
+</head>
+<body style="height: 100%; margin: 0">
+<div  style="text-align: center; background-color: #0f375f; padding: 2px 1px 18px 1px">
+<font color="white">开始日期: </font><input type="text" name="start" id="start"/>
+<font color="white">  结束日期: </font><input type="text" name="end" id="end" />
+<font color="white">  (筛选时间间隔：大于10天，小于118天)</font>
+<button type="button" id="but">确定</button>
+</div>
+<div id="container" style="height: 100%"></div>
+<a href="https://github.com/requests/requests">
+    <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub">
+</a>
+<script type="text/javascript">
+
+dom = document.getElementById("container");
+if(!isPC())
+{
+    dom.style.height = "48%";
+}
+    myChart = echarts.init(dom);
+    var xy=getXY(null,null);
+    var option = getOption(xy[0],xy[1]);
+    if (option && typeof option === "object") {
+        myChart.setOption(option, true);
+    }
+
+</script>
+</body>
+<script type="text/javascript">
+var but = document.getElementById('but');
+but.onclick = function(){
+    var startInput=document.getElementById("start");
+    var endInput=document.getElementById("end");
+    var xy=getXY(startInput.value,endInput.value);
+    var option = getOption(xy[0],xy[1]);
+    if (option && typeof option === "object") {
+        myChart.setOption(option, true);
+    }
+
+};</script>
+</html>
+    
+
