@@ -2,7 +2,7 @@
 北京地铁客流量统计（py爬虫+js统计图） 
 
 ---
-<img width = "80%" height = "80%" src="https://github.com/gojuukaze/BeiJingSubwayFlows/blob/master//tu.png?raw=true">
+<img src="https://github.com/gojuukaze/BeiJingSubwayFlows/blob/master//tu.png?raw=true">
 
 # 结果：
 https://www.ikaze.cn/sub_flows.html  
