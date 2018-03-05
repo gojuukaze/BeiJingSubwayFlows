@@ -172,12 +172,11 @@ def get_cahrt_xy(flows):
 
 html=get_html_from_sina()
 d, flow = get_flow_from_sina_html(html).split(',')
-print(d,flow)
-# if get_yesterday_date() == str_to_date(d, "%Y.%m.%d"):
-#     with open(save_flows_file, 'a')as f:
-#         f.write("%s,%s\n" % (d, flow))
+if get_yesterday_date() == str_to_date(d, "%Y.%m.%d"):
+    with open(save_flows_file, 'a')as f:
+        f.write("%s,%s\n" % (d, flow))
 
-#     flows = get_flows_from_file()
-#     flows = sorted(flows, key=lambda f: f[0])
-#     with open(sub_data_js_file, 'w')as f:
-#         f.write(get_cahrt_xy(flows))
+    flows = get_flows_from_file()
+    flows = sorted(flows, key=lambda f: f[0])
+    with open(sub_data_js_file, 'w')as f:
+        f.write(get_cahrt_xy(flows))
